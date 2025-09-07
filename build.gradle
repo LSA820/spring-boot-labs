@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group = 'hello'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories { mavenCentral() }
+
+dependencies {
+    // 톰캣이 제공하므로 패키징 제외
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+
+    // Spring MVC (jakarta 호환, 최신 패치)
+    implementation 'org.springframework:spring-webmvc:6.2.10'
+}
+
+// 테스트 설정(그대로)
+tasks.named('test') { useJUnitPlatform() }
+
+// exploded WAR 생성
+tasks.register('explodedWar', Copy) {
+    dependsOn tasks.war
+    into "$buildDir/exploded"
+    with tasks.war
+}
